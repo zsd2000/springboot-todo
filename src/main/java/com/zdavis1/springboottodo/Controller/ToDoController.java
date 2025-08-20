@@ -5,6 +5,7 @@ import com.zdavis1.springboottodo.Service.ToDoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("")
@@ -23,5 +24,10 @@ public class ToDoController {
     @GetMapping("/tasks/{id}")
     public ToDoModel getATask(@PathVariable Long id) {
         return service.retriveByID(id);
+    }
+
+    @DeleteMapping("tasks/{id}")
+    public void deleteATask(@PathVariable Long id) {
+        service.deleteTask(id);
     }
 }

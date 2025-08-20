@@ -2,9 +2,7 @@ package com.zdavis1.springboottodo.Controller;
 
 import com.zdavis1.springboottodo.Model.ToDoModel;
 import com.zdavis1.springboottodo.Service.ToDoService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,10 @@ public class ToDoController {
     @GetMapping("/tasks")
     public List<ToDoModel> getTasks() {
         return service.retrieveAllTasks();
+    }
+
+    @GetMapping("/tasks/{id}")
+    public ToDoModel getATask(@PathVariable Long id) {
+        return service.retriveByID(id);
     }
 }

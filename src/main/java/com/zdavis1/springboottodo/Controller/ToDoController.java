@@ -16,17 +16,26 @@ public class ToDoController {
         this.service = service;
     }
 
-    @GetMapping("/tasks")
+    // NEEDS REWORK. Learning how to send status 201 and map to new URL with object being returned.
+    @PostMapping("/task")
+    public ToDoModel createTasks(@RequestBody ToDoModel task) {
+        return service.createTask(task);
+    }
+
+    // GET all
+    @GetMapping("/task")
     public List<ToDoModel> getTasks() {
         return service.retrieveAllTasks();
     }
 
-    @GetMapping("/tasks/{id}")
+    // GET one
+    @GetMapping("/task/{id}")
     public ToDoModel getATask(@PathVariable Long id) {
         return service.retriveByID(id);
     }
 
-    @DeleteMapping("tasks/{id}")
+    // Delete one
+    @DeleteMapping("task/{id}")
     public void deleteATask(@PathVariable Long id) {
         service.deleteTask(id);
     }

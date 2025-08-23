@@ -2,6 +2,9 @@ package com.zdavis1.springboottodo.Controller;
 
 import com.zdavis1.springboottodo.Model.ToDoModel;
 import com.zdavis1.springboottodo.Service.ToDoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +19,14 @@ public class ToDoController {
         this.service = service;
     }
 
-    // NEEDS REWORK. Learning how to send status 201 and map to new URL with object being returned.
+    // Create new task, outputting the object and status code 201
     @PostMapping("/task")
-    public ToDoModel createTasks(@RequestBody ToDoModel task) {
-        return service.createTask(task);
+    public ResponseEntity<ToDoModel> createTasks(@RequestBody ToDoModel task) {
+        ToDoModel newTask = service.createTask(task);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(newTask);
     }
 
     // GET all

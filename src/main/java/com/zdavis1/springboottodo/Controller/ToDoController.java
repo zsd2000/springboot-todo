@@ -3,12 +3,10 @@ package com.zdavis1.springboottodo.Controller;
 import com.zdavis1.springboottodo.Model.ToDoModel;
 import com.zdavis1.springboottodo.Service.ToDoService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("")
@@ -19,7 +17,7 @@ public class ToDoController {
         this.service = service;
     }
 
-    // Create new task, outputting the object and status code 201
+    // CREATE new task. Learned to output status code 201 for successful creation
     @PostMapping("/task")
     public ResponseEntity<ToDoModel> createTasks(@RequestBody ToDoModel task) {
         ToDoModel newTask = service.createTask(task);
@@ -29,17 +27,20 @@ public class ToDoController {
                 .body(newTask);
     }
 
-    // GET all
+    // RETRIEVE all
     @GetMapping("/task")
     public List<ToDoModel> getTasks() {
         return service.retrieveAllTasks();
     }
 
-    // GET one
+    // RETRIEVE one
     @GetMapping("/task/{id}")
     public ToDoModel getATask(@PathVariable Long id) {
-        return service.retriveByID(id);
+        return service.retrieveByID(id);
     }
+
+    // NEED TO IMPLEMENT UPDATE TASK METHOD
+    // AWAITING TODOSERVICE METHOD
 
     // Delete one
     @DeleteMapping("task/{id}")

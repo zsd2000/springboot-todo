@@ -23,9 +23,11 @@ public class ToDoService {
         return repository.findAll();
     }
 
-    public ToDoModel retriveByID(Long id) {
+    public ToDoModel retrieveByID(Long id) {
         return repository.findById(id).orElse(null);
     }
+
+    // NEED TO IMPLEMENT UPDATE METHOD
 
     public void deleteTask(Long id) {
         if (repository.existsById(id)) {

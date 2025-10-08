@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ToDoService {
@@ -27,7 +28,20 @@ public class ToDoService {
         return repository.findById(id).orElse(null);
     }
 
-    // NEED TO IMPLEMENT UPDATE METHOD
+
+    public Boolean updateTask(Long id, ToDoModel task) {
+        if (repository.existsById(id)) {
+            ToDoModel updateTask = repository.getReferenceById(id);
+            updateTask.setTitle(task.getTitle());
+            updateTask.setDescription(task.getDescription());
+            updateTask.setDueDate(task.getDueDate());
+            repository.save(updateTask);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     public void deleteTask(Long id) {
         if (repository.existsById(id)) {

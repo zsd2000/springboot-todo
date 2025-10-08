@@ -39,8 +39,20 @@ public class ToDoController {
         return service.retrieveByID(id);
     }
 
-    // NEED TO IMPLEMENT UPDATE TASK METHOD
-    // AWAITING TODOSERVICE METHOD
+    // UPDATE one task
+    @PutMapping("/task/{id}")
+    public ResponseEntity<ToDoModel> updateTask(@PathVariable Long id, @RequestBody ToDoModel task) {
+        Boolean result = service.updateTask(id, task);
+
+        if (result) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(task);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
     // Delete one
     @DeleteMapping("task/{id}")

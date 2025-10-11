@@ -35,8 +35,17 @@ public class ToDoController {
 
     // RETRIEVE one
     @GetMapping("/tasks/{id}")
-    public ToDoModel getATask(@PathVariable Long id) {
-        return service.retrieveByID(id);
+    public ResponseEntity<ToDoModel> getATask(@PathVariable Long id) {
+        if (service.retrieveByID(id) == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        else {
+            ToDoModel task = service.retrieveByID(id);
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(task);
+        }
     }
 
     // UPDATE one task

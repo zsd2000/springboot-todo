@@ -57,8 +57,12 @@ public class ToDoController {
     // Delete one
     @DeleteMapping("tasks/{id}")
     public ResponseEntity<ToDoModel> deleteATask(@PathVariable Long id) {
-        service.deleteTask(id);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        if (service.retrieveByID(id) == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        else {
+            service.deleteTask(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 }

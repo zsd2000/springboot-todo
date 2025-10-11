@@ -18,7 +18,7 @@ public class ToDoController {
     }
 
     // CREATE new task. Learned to output status code 201 for successful creation
-    @PostMapping("/task")
+    @PostMapping("/tasks")
     public ResponseEntity<ToDoModel> createTasks(@RequestBody ToDoModel task) {
         ToDoModel newTask = service.createTask(task);
 
@@ -28,19 +28,19 @@ public class ToDoController {
     }
 
     // RETRIEVE all
-    @GetMapping("/task")
+    @GetMapping("/tasks")
     public List<ToDoModel> getTasks() {
         return service.retrieveAllTasks();
     }
 
     // RETRIEVE one
-    @GetMapping("/task/{id}")
+    @GetMapping("/tasks/{id}")
     public ToDoModel getATask(@PathVariable Long id) {
         return service.retrieveByID(id);
     }
 
     // UPDATE one task
-    @PutMapping("/task/{id}")
+    @PutMapping("/tasks/{id}")
     public ResponseEntity<ToDoModel> updateTask(@PathVariable Long id, @RequestBody ToDoModel task) {
         Boolean result = service.updateTask(id, task);
 
@@ -55,8 +55,10 @@ public class ToDoController {
     }
 
     // Delete one
-    @DeleteMapping("task/{id}")
-    public void deleteATask(@PathVariable Long id) {
+    @DeleteMapping("tasks/{id}")
+    public ResponseEntity<ToDoModel> deleteATask(@PathVariable Long id) {
         service.deleteTask(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

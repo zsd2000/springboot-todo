@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +38,8 @@ public class ToDoServiceTest {
 
     @Test
     public void retrieveAllTasks() {
-
+        Mockito.when(repository.findAll()).thenReturn(List.of(task));
+        List<ToDoModel> result = service.retrieveAllTasks();
+        Assertions.assertEquals(1, result.size());
     }
 }

@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -57,12 +58,31 @@ public class ToDoServiceTest {
         Mockito.when(repository.getReferenceById(1L)).thenReturn(task);
         Mockito.when(repository.save(task)).thenReturn(task);
 
-        ToDoModel newTask = new ToDoModel("Test updateTask", "Method test", "10/11/2025");
-
-        service.updateTask(1L, newTask);
+        service.updateTask(1L, task);
 
         Mockito.verify(repository).existsById(1L);
         Mockito.verify(repository).getReferenceById(1L);
         Mockito.verify(repository).save(task);
+
+
+        // MOVE TO SEPARATE METHOD
+        Mockito.when(repository.existsById(2L)).thenReturn(false);
+
+        Boolean update2 = service.updateTask(2L, task);
+
+        Mockito.verify(repository, Mockito.never()).getReferenceById(2L);
+        Assertions.assertFalse(update2);
+    }
+
+    @Test
+    public void deleteTask() {
+        Mockito.when(repository.existsById(1L)).thenReturn(true);
+        Mockito.when(repository.existsById(2L)).thenReturn(false);
+
+        service.deleteTask(1L);
+
+        Mockito.verify(repository).deleteById(1L);
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> service.deleteTask(2L));
     }
 }

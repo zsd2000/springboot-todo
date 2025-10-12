@@ -50,4 +50,19 @@ public class ToDoServiceTest {
         ToDoModel result = service.retrieveByID(1L);
         Assertions.assertEquals(task, result);
     }
+
+    @Test
+    public void updateTask() {
+        Mockito.when(repository.existsById(1L)).thenReturn(true);
+        Mockito.when(repository.getReferenceById(1L)).thenReturn(task);
+        Mockito.when(repository.save(task)).thenReturn(task);
+
+        ToDoModel newTask = new ToDoModel("Test updateTask", "Method test", "10/11/2025");
+
+        service.updateTask(1L, newTask);
+
+        Mockito.verify(repository).existsById(1L);
+        Mockito.verify(repository).getReferenceById(1L);
+        Mockito.verify(repository).save(task);
+    }
 }

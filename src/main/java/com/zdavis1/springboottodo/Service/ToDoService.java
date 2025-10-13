@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ToDoService {
@@ -23,29 +24,35 @@ public class ToDoService {
         return repository.findAll();
     }
 
-    public ToDoModel retrieveByID(Long id) {
-        return repository.findById(id).orElse(null);
+    public Optional<ToDoModel> retrieveByID(Long id) {
+        Optional<ToDoModel> optional = repository.findById(id);
+
+        if (optional.isPresent()) {
+            return optional;
+        }
+
+        throw new NoSuchElementException();
     }
 
+    public Optional<ToDoModel> updateTask(Long id, ToDoModel task) {
+        Optional<ToDoModel> existingTask = retrieveByID(id);
 
-    public Boolean updateTask(Long id, ToDoModel task) {
-        if (repository.existsById(id)) {
-            ToDoModel updateTask = repository.getReferenceById(id);
-            updateTask.setTitle(task.getTitle());
-            updateTask.setDescription(task.getDescription());
-            updateTask.setDueDate(task.getDueDate());
-            repository.save(updateTask);
-            return true;
+        if (existingTask.isPresent()) {
+            existingTask.get().setTitle(task.getTitle());
+            existingTask.get().setDescription(task.getDescription());
+            existingTask.get().setDueDate(task.getDueDate());
+            repository.save(existingTask.get());
+            return existingTask;
         }
-        else {
-            return false;
-        }
+
+        throw new NoSuchElementException();
     }
 
-    public void deleteTask(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-        }
-        else throw new NoSuchElementException("Task with id " + id + " not found");
+    public Optional<ToDoModel> deleteTask(Long id) {
+        Optional<ToDoModel> task = retrieveByID(id);
+
+        repository.delete(task.get());
+
+        return task;
     }
 }

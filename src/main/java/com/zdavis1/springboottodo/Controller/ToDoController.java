@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("")
@@ -36,42 +37,36 @@ public class ToDoController {
     // RETRIEVE one
     @GetMapping("/tasks/{id}")
     public ResponseEntity<ToDoModel> getATask(@PathVariable Long id) {
-        if (service.retrieveByID(id) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            ToDoModel task = service.retrieveByID(id).get();
+            return ResponseEntity.ok(task);
         }
-        else {
-            ToDoModel task = service.retrieveByID(id);
-
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(task);
+        catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     // UPDATE one task
     @PutMapping("/tasks/{id}")
     public ResponseEntity<ToDoModel> updateTask(@PathVariable Long id, @RequestBody ToDoModel task) {
-        Boolean result = service.updateTask(id, task);
-
-        if (result) {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(task);
+        try {
+            ToDoModel updateTask = service.updateTask(id, task).get();
+            return ResponseEntity.ok(updateTask);
         }
-        else {
+        catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     // Delete one
     @DeleteMapping("tasks/{id}")
-    public ResponseEntity<ToDoModel> deleteATask(@PathVariable Long id) {
-        if (service.retrieveByID(id) == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        else {
-            service.deleteTask(id);
+    public ResponseEntity<Void> deleteATask(@PathVariable Long id) {
+        try {
+            ToDoModel deleteTask = service.deleteTask(id).get();
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

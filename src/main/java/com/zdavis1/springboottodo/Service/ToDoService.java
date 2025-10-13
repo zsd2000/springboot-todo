@@ -23,6 +23,7 @@ public class ToDoService {
     public List<ToDoModel> retrieveAllTasks() {
         return repository.findAll();
     }
+
     public Optional<ToDoModel> retrieveByID(Long id) {
         Optional<ToDoModel> optional = repository.findById(id);
 

@@ -45,46 +45,43 @@ public class ToDoServiceTest {
         Assertions.assertEquals(1, result.size());
     }
 
-    /*
     @Test
-    public void retrieveByID() {
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.ofNullable(task));
-        service.retrieveByID(1L);
-        Mockito.verify(repository, Mockito.times(1)).findById(1L);
+    public void retrieveTask() {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(task));
+        Optional<ToDoModel> result = service.retrieveByID(1L);
+        Assertions.assertEquals(task, result.get());
+
+        Mockito.when(repository.findById(2L)).thenReturn(Optional.empty());
+        Assertions.assertThrows(NoSuchElementException.class, () -> {service.retrieveByID(2L);});
     }
 
     @Test
-    public void updateTask() {
-        Mockito.when(repository.existsById(1L)).thenReturn(true);
-        Mockito.when(repository.getReferenceById(1L)).thenReturn(task);
+    public void updateTaskSuccess() {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(task));
         Mockito.when(repository.save(task)).thenReturn(task);
 
-        service.updateTask(1L, task);
-
-        Mockito.verify(repository).existsById(1L);
-        Mockito.verify(repository).getReferenceById(1L);
-        Mockito.verify(repository).save(task);
-
-
-        // MOVE TO SEPARATE METHOD
-        Mockito.when(repository.existsById(2L)).thenReturn(false);
-
-        Boolean update2 = service.updateTask(2L, task);
-
-        Mockito.verify(repository, Mockito.never()).getReferenceById(2L);
-        Assertions.assertFalse(update2);
+        Optional<ToDoModel> updateTask = service.updateTask(1L, task);
+        Mockito.verify(repository, Mockito.times(1)).save(task);
+        Assertions.assertEquals(task, updateTask.get());
     }
 
     @Test
-    public void deleteTask() {
-        Mockito.when(repository.existsById(1L)).thenReturn(true);
-        Mockito.when(repository.existsById(2L)).thenReturn(false);
+    public void updateTaskFailure() {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        service.deleteTask(1L);
-
-        Mockito.verify(repository).deleteById(1L);
-
-        Assertions.assertThrows(NoSuchElementException.class, () -> service.deleteTask(2L));
+        Assertions.assertThrows(NoSuchElementException.class, () -> {service.updateTask(1L, task);});
     }
-     */
+
+    @Test
+    public void deleteTaskSuccess() {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(task));
+        service.deleteTask(1L);
+        Mockito.verify(repository, Mockito.times(1)).delete(task);
+    }
+
+    @Test
+    public void deleteTaskFailure() {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.empty());
+        Assertions.assertThrows(NoSuchElementException.class, () -> {service.deleteTask(1L);});
+    }
 }

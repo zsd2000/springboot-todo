@@ -5,6 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+/**
+ * Represents a task entity in the ToDoApplication
+ * A task is made up of a title, description, and due date (all Strings)
+ * Mapped to database as a JPA entity
+ */
 @Entity
 public class ToDoModel {
     @Id

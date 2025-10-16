@@ -51,7 +51,7 @@ The application includes unit testing, Postman validation, and detailed JavaDocs
 1. Clone the repository
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/springboot-todo.git
+   git clone https://github.com/zsdavis2000/springboot-todo.git
    cd springboot-todo
    ```
 2. Run the application
@@ -60,6 +60,17 @@ The application includes unit testing, Postman validation, and detailed JavaDocs
    ./mvnw spring-boot:run
    ```
 3. Test endpoints with Postman at `http://localhost:8080`
+
+---
+
+## Testing
+Endpoints were verified using Postman.
+
+![Postman Example - Create Task](docs/CReate Task.png)
+*Create Task – 201 Created*
+
+![Postman Example - Retrieve Tasks](docs/Get All Tasks.png)
+*Retrieve All Tasks – 200 OK*
 
 ---
 

@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Handles all HTTP requests for the ToDoApplication
+ * Interacts with the service layer to perform logic and store/retrieve data, managing flow between client and server
+ * Uses Dependency Injection to insert service layer
+ */
 @RestController
 @RequestMapping("")
 public class ToDoController {
@@ -18,7 +23,11 @@ public class ToDoController {
         this.service = service;
     }
 
-    // CREATE new task. Learned to output status code 201 for successful creation
+    /**
+     * Creates/stores a task
+     * @param task The task requested to be stored from the client
+     * @return ResponseEntity<ToDoModel> The saved task and HTTP status code 201
+     */
     @PostMapping("/tasks")
     public ResponseEntity<ToDoModel> createTasks(@RequestBody ToDoModel task) {
         ToDoModel newTask = service.createTask(task);
@@ -28,13 +37,20 @@ public class ToDoController {
                 .body(newTask);
     }
 
-    // RETRIEVE all
+    /**
+     * Retrieves all saved tasks
+     * @return List<ToDoModel> A list of all saved tasks
+     */
     @GetMapping("/tasks")
     public List<ToDoModel> getTasks() {
         return service.retrieveAllTasks();
     }
 
-    // RETRIEVE one
+    /**
+     * Retrieves a specific task
+     * @param id The unique ID of the requested task
+     * @return ResponseEntity<ToDoModel> The desired task and HTTP status code 200 if found, 404 if not found
+     */
     @GetMapping("/tasks/{id}")
     public ResponseEntity<ToDoModel> getATask(@PathVariable Long id) {
         try {
@@ -46,7 +62,12 @@ public class ToDoController {
         }
     }
 
-    // UPDATE one task
+    /**
+     * Retrieves, updates, and saves a specific task
+     * @param id The unique ID of the requested task
+     * @param task The updated task information
+     * @return ResponseEntity<ToDoModel> The updated task and HTTP status code 200 if found, 404 if not found
+     */
     @PutMapping("/tasks/{id}")
     public ResponseEntity<ToDoModel> updateTask(@PathVariable Long id, @RequestBody ToDoModel task) {
         try {
@@ -58,7 +79,11 @@ public class ToDoController {
         }
     }
 
-    // Delete one
+    /**
+     * Deletes task
+     * @param id The unique ID of the requested task
+     * @return ResponseEntity<Void> Sends HTTP status code 204 if deleted, 404 if not found
+     */
     @DeleteMapping("tasks/{id}")
     public ResponseEntity<Void> deleteATask(@PathVariable Long id) {
         try {

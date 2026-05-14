@@ -21,6 +21,7 @@ public class ToDoService {
         this.repository = repository;
     }
 
+    // ------------------- CREATE -------------------
     /**
      * Creates a task
      * @param task The task the user is adding to the database
@@ -30,6 +31,7 @@ public class ToDoService {
         return repository.save(task);
     }
 
+    // ------------------- RETRIEVE -------------------
     /**
      * Retrieves all saved tasks in the database
      * @return List<ToDoModel> A list of all saved tasks
@@ -54,6 +56,11 @@ public class ToDoService {
         throw new NoSuchElementException();
     }
 
+    public Optional<ToDoModel> retriveByPriority(int priority) {}
+
+    public Optional<ToDoModel> retrieveByComplete(boolean complete) {}
+
+    // ------------------- UPDATE -------------------
     /**
      * Updates a previously saved task
      * @param id The unique ID assigned to the task
@@ -66,7 +73,7 @@ public class ToDoService {
         if (existingTask.isPresent()) {
             existingTask.get().setTitle(task.getTitle());
             existingTask.get().setDescription(task.getDescription());
-            existingTask.get().setDueDate(task.getDueDate());
+            existingTask.get().setDueDate(task.getDueDate().toString());
             repository.save(existingTask.get());
             return existingTask;
         }
@@ -74,6 +81,7 @@ public class ToDoService {
         throw new NoSuchElementException();
     }
 
+    // ------------------- DELETE -------------------
     /**
      * Deletes the specified task
      * @param id The unique ID assigned to the task

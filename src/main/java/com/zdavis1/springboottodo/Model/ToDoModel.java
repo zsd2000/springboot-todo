@@ -1,30 +1,40 @@
 package com.zdavis1.springboottodo.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 /**
  * Represents a task entity in the ToDoApplication
- * A task is made up of a title (String), description (String), due date (LocalDate), and priority (int)
+ * A task is made up of a title (String), description (String), due date (LocalDate), priority (int), and completed
+ * (boolean)
  * Mapped to database as a JPA entity
- * "priority" was recently added (05132026)
+ * "priority" and "completed" was recently added (05132026)
  *
  * @author Zachary Davis
  * @date 05132026
  */
 @Entity
+@Table(name = "TASKS")
 public class ToDoModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
+    @Column(name = "COMPLETE")
+    private boolean complete;
+
+    @Column(name = "TITLE", nullable = false, length = 50)
     private String title;
+
+    @Column(name = "DESCRIPTION",length = 100)
     private String description;
+
+    @Column(name = "DUE_DATE", nullable = false)
     private LocalDate dueDate;
+
+    @Column(name = "PRIORITY", nullable = false)
     private int priority;
 
     public ToDoModel() {}
@@ -67,5 +77,13 @@ public class ToDoModel {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 }

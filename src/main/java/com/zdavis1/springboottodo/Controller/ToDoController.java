@@ -2,6 +2,7 @@ package com.zdavis1.springboottodo.Controller;
 
 import com.zdavis1.springboottodo.Model.ToDoModel;
 import com.zdavis1.springboottodo.Service.ToDoService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,22 @@ public class ToDoController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(newTask);
+    }
+
+    @PostMapping("/tasks")
+    public ResponseEntity<ToDoModel> createTaskCustom(@RequestBody ToDoModel task) {
+
+        try {
+            service.createTaskCustom(task);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(task);
     }
 
     /**

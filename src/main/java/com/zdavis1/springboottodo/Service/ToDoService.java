@@ -4,6 +4,7 @@ import com.zdavis1.springboottodo.Model.ToDoModel;
 import com.zdavis1.springboottodo.Repository.ToDoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,6 +30,25 @@ public class ToDoService {
      */
     public ToDoModel createTask(ToDoModel task) {
         return repository.save(task);
+    }
+
+    public void createTaskCustom(ToDoModel task) {
+        String title = task.getTitle();
+        String description = task.getDescription();
+        LocalDate dueDate = task.getDueDate();
+        int priority = task.getPriority();
+
+        if (title == null) {
+            throw new IllegalArgumentException("Title must not be null");
+        }
+        if (dueDate == null) {
+            throw new IllegalArgumentException("Due Date must not be null");
+        }
+        if (priority < 1 || priority > 3) {
+            throw new IllegalArgumentException("Priority must be between 1 and 3");
+        }
+
+        repository.insertTask(title, description, dueDate, priority);
     }
 
     // ------------------- RETRIEVE -------------------

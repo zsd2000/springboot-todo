@@ -13,6 +13,10 @@ import java.util.Optional;
  * Handles all business logic of tasks (ToDoModel entities)
  * Interacts with the repository layer for CRUD operations
  * Uses Dependency Injection to insert repository layer
+ * Added additional methods to use custom SQL queries
+ * Input validation added, throwing an exception to the Controller layer if invalid input is passed
+ * @author Zachary Davis
+ * @version 07252026
  */
 @Service
 public class ToDoService {
@@ -24,14 +28,14 @@ public class ToDoService {
 
     // ------------------- CREATE -------------------
     /**
-     * Creates a task
-     * @param task The task the user is adding to the database
-     * @return ToDoModel The task that was saved
+     * Insert a new task into the database
+     * Utilizes a custom SQL query
+     * Throws an IllegalArgumentException if input is invalid
+     * @param task task object to be inserted into the DB
+     * @return true if task is added
+     * @author Zachary Davis
+     * @version 07252026
      */
-    public ToDoModel createTask(ToDoModel task) {
-        return repository.save(task);
-    }
-
     public void createTaskCustom(ToDoModel task) {
         String title = task.getTitle();
         String description = task.getDescription();
@@ -55,6 +59,7 @@ public class ToDoService {
     /**
      * Retrieves all saved tasks in the database
      * @return List<ToDoModel> A list of all saved tasks
+     * @author Zachary Davis
      */
     public List<ToDoModel> retrieveAllTasks() {
         return repository.findAll();
@@ -65,6 +70,7 @@ public class ToDoService {
      * The task is only retrieved if it exists within the database, throwing an exception if null
      * @param id The unique ID assigned to the task
      * @return Optional<ToDoModel> Either the specified task or an exception, if the task is not found
+     * @author Zachary Davis
      */
     public Optional<ToDoModel> retrieveByID(Long id) {
         Optional<ToDoModel> optional = repository.findById(id);
@@ -76,9 +82,16 @@ public class ToDoService {
         throw new NoSuchElementException();
     }
 
-    public Optional<ToDoModel> retriveByPriority(int priority) {}
-
-    public Optional<ToDoModel> retrieveByComplete(boolean complete) {}
+    /**
+     * Retrieve all completed tasks in the DB
+     * Utilizes custom SQL query
+     * @return a list of completed Tasks
+     * @author Zachary Davis
+     * @version 07252026
+     */
+    public List<ToDoModel> retrieveByComplete() {
+        return repository.findByCompleted();
+    }
 
     // ------------------- UPDATE -------------------
     /**
@@ -101,6 +114,8 @@ public class ToDoService {
         throw new NoSuchElementException();
     }
 
+    public Optional<ToDoModel> markTaskComplete(Long id)
+
     // ------------------- DELETE -------------------
     /**
      * Deletes the specified task
@@ -114,4 +129,6 @@ public class ToDoService {
 
         return task;
     }
+
+    public Optional<ToDoModel> deleteCompletedTask(Long id)
 }

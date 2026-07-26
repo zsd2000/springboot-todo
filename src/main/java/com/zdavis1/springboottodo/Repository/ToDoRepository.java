@@ -55,7 +55,6 @@ public interface ToDoRepository extends JpaRepository<ToDoModel, Long> {
      * Custom query to mark a task complete
      * Demonstrates a simple UPDATE call
      * @param id
-     * @param complete
      * @return int the number of rows updated. This should return 1, as each task has a unique id
      * @author Zachary Davis
      * @version 07252026
@@ -66,7 +65,7 @@ public interface ToDoRepository extends JpaRepository<ToDoModel, Long> {
             (value = "UPDATE TASKS " +
                     "SET COMPLETE = ?2 " +
                     "WHERE ID = ?1", nativeQuery = true)
-    int markComplete(long id, boolean complete);
+    int markComplete(long id);
 
     /**
      * Custom query to delete a completed task

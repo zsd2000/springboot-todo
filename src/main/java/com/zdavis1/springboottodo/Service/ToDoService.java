@@ -36,7 +36,7 @@ public class ToDoService {
      * @author Zachary Davis
      * @version 07252026
      */
-    public void createTaskCustom(ToDoModel task) {
+    public void createTask(ToDoModel task) {
         String title = task.getTitle();
         String description = task.getDescription();
         LocalDate dueDate = task.getDueDate();
@@ -89,7 +89,7 @@ public class ToDoService {
      * @author Zachary Davis
      * @version 07252026
      */
-    public List<ToDoModel> retrieveByComplete() {
+    public List<ToDoModel> retrieveAllCompleted() {
         return repository.findByCompleted();
     }
 
@@ -114,7 +114,19 @@ public class ToDoService {
         throw new NoSuchElementException();
     }
 
-    public Optional<ToDoModel> markTaskComplete(Long id)
+    public boolean markTaskComplete(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
+
+        int result = repository.markComplete(id);
+
+        if (result != 1) {
+            throw new NoSuchElementException("Task not found");
+        }
+
+        return true;
+    }
 
     // ------------------- DELETE -------------------
     /**

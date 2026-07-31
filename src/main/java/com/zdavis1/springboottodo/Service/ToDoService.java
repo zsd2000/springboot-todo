@@ -32,7 +32,6 @@ public class ToDoService {
      * Utilizes a custom SQL query
      * Throws an IllegalArgumentException if input is invalid
      * @param task task object to be inserted into the DB
-     * @return true if task is added
      * @author Zachary Davis
      * @version 07252026
      */
@@ -114,6 +113,12 @@ public class ToDoService {
         throw new NoSuchElementException();
     }
 
+    /**
+     * Marks a single task complete
+     * Utilized custom SQL query
+     * @param id The unique ID assigned to the task
+     * @return true/false if the task was found
+     */
     public boolean markTaskComplete(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null");
@@ -142,5 +147,23 @@ public class ToDoService {
         return task;
     }
 
-    public Optional<ToDoModel> deleteCompletedTask(Long id)
+    /**
+     * Deletes a single completed task
+     * Utilizes custom SQL query
+     * @param id The unique ID assigned to the task
+     * @return true/false if the task was found
+     */
+    public boolean deleteCompletedTask(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
+
+        int result = repository.deleteCompleted(id);
+
+        if (result != 1) {
+            throw new NoSuchElementException("Task not found");
+        }
+
+        return true;
+    }
 }

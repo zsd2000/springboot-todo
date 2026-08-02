@@ -25,6 +25,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+tasks.named("bootRun") {
+    mainClass = 'com.zdavis1.springboottodo.SpringbootTodoApplication'
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

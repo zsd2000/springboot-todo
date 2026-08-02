@@ -14,39 +14,35 @@ import java.util.NoSuchElementException;
  * Handles all HTTP requests for the ToDoApplication
  * Interacts with the service layer to perform logic and store/retrieve data, managing flow between client and server
  * Uses Dependency Injection to insert service layer
+ * @author Zachary Davis
+ * @version 08012026
  */
 @RestController
 @RequestMapping("")
 public class ToDoController {
-    private ToDoService service;
+    private final ToDoService service;
 
     public ToDoController(ToDoService service) {
         this.service = service;
     }
 
     /**
-     * Creates/stores a task
+     * Create new task
+     * Title, Due Date, and Priority MUST be passed
+     * Due Date format must be: "YYYY-MM-DD"
      * @param task The task requested to be stored from the client
      * @return ResponseEntity<ToDoModel> The saved task and HTTP status code 201
+     * @author Zachary Davis
+     * @version 08012026
      */
     @PostMapping("/tasks")
-    public ResponseEntity<ToDoModel> createTasks(@RequestBody ToDoModel task) {
-        ToDoModel newTask = service.createTask(task);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(newTask);
-    }
-
-    @PostMapping("/tasks")
-    public ResponseEntity<ToDoModel> createTaskCustom(@RequestBody ToDoModel task) {
-
+    public ResponseEntity<ToDoModel> createTask(@RequestBody ToDoModel task) {
         try {
-            service.createTaskCustom(task);
+            service.createTask(task);
         }
         catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            System.out.println(e.getMessage()); // For "personal" logging
+            return ResponseEntity.badRequest().build(); // Trying ResponseEntity Builder
         }
 
         return ResponseEntity

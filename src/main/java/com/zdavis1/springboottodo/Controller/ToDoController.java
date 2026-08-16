@@ -2,13 +2,13 @@ package com.zdavis1.springboottodo.Controller;
 
 import com.zdavis1.springboottodo.Model.ToDoModel;
 import com.zdavis1.springboottodo.Service.ToDoService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Handles all HTTP requests for the ToDoApplication
@@ -26,6 +26,13 @@ public class ToDoController {
         this.service = service;
     }
 
+    /**
+     * I want to add URL parameters here. Need to refactor to include this.
+     * Zachary Davis
+     * 08092026
+     */
+
+    // ------------------- CREATE -------------------
     /**
      * Create new task
      * Title, Due Date, and Priority MUST be passed
@@ -50,6 +57,7 @@ public class ToDoController {
                 .body(task);
     }
 
+    // ------------------- RETRIEVE -------------------
     /**
      * Retrieves all saved tasks
      * @return List<ToDoModel> A list of all saved tasks
@@ -76,6 +84,19 @@ public class ToDoController {
     }
 
     /**
+     * Retrieves all completed tasks.
+     * Uses custom SQL query.
+     * @return A list of completed tasks
+     * @author Zachary Davis
+     * @version 08092026
+     */
+    @GetMapping("/tasks/completed")
+    public List<ToDoModel> getCompletedTasks() {
+        return service.retrieveAllCompleted();
+    }
+
+    // ------------------- UPDATE -------------------
+    /**
      * Retrieves, updates, and saves a specific task
      * @param id The unique ID of the requested task
      * @param task The updated task information
@@ -93,6 +114,31 @@ public class ToDoController {
     }
 
     /**
+     * Marks a single task complete
+     * Uses custom SQL query
+     * @param id The task to mark complete
+     * @return The updated task
+     */
+    @PatchMapping("/tasks/{id}")
+    public ResponseEntity<ToDoModel> markTaskComplete(@PathVariable Long id) {
+        try {
+            service.markTaskComplete(id);
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+        catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.
+                status(HttpStatus.OK).
+                body(service.retrieveByID(id).get());
+    }
+
+    // ------------------- DELETE -------------------
+    /**
      * Deletes task
      * @param id The unique ID of the requested task
      * @return ResponseEntity<Void> Sends HTTP status code 204 if deleted, 404 if not found
@@ -105,6 +151,28 @@ public class ToDoController {
         }
         catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    /**
+     * Deletes a single, specified task ONLY if the task has been marked complete
+     * Uses custom SQL query
+     * @param id the task to delete
+     * @return A void HTTP status build
+     */
+    @DeleteMapping("/tasks/complete/{id}")
+    public ResponseEntity<Void> deleteCompletedTask(@PathVariable Long id) {
+        try {
+            service.deleteCompletedTask(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 }

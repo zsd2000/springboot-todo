@@ -157,6 +157,9 @@ public class ToDoService {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null");
         }
+        if (repository.findById(id).isPresent() && !repository.findById(id).get().isComplete()) {
+            throw new IllegalArgumentException("Task is not completed");
+        }
 
         int result = repository.deleteCompleted(id);
 
